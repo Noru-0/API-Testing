@@ -1,0 +1,9 @@
+TestCaseID,by_brand,by_category,is_rental,between,sort,method,ExpectedStatus
+TC_Get_Prod_01,,,,,,GET,200
+TC_Get_Prod_02,1,,,,,GET,200
+TC_Get_Prod_04,,2,,,,GET,200
+TC_Get_Prod_06,,,1,,,GET,200
+TC_Get_Prod_08,,,,"price,10,50",,GET,200
+TC_Get_Prod_10,,,,,"name,asc",GET,200
+TC_Get_Prod_12,1,2,1,,,GET,200
+TC_Get_Prod_13,,,,"price,0,0",,GET,200

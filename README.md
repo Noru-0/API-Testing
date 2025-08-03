@@ -173,3 +173,29 @@ docker compose exec laravel-api php artisan migrate:fresh --seed --force
 ---
 
 **Chúc các bạn hoàn thành tốt bài tập!**
+
+
+├─ tests
+│  ├─ .DS_Store
+│  ├─ api
+│  │  ├─ environment.json
+│  │  ├─ products
+│  │  │  └─ get_products_postman_collection.json
+│  │  └─ user
+│  │     └─ Login_API_Tests.postman_collection.json
+│  └─ data
+│     ├─ get_products_data.csv
+│     └─ user_account.csv
+└─ _docker
+   ├─ app.docker
+   ├─ collectd.conf
+   ├─ cron
+   │  ├─ Dockerfile
+   │  └─ laravel_crontab
+   ├─ opcache.ini
+   ├─ php-ini-overrides.ini
+   ├─ ui.docker
+   ├─ vhost.conf
+   └─ web.docker
+
+```

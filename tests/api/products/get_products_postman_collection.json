@@ -1,14 +1,14 @@
 {
   "info": {
-    "name": "API Testing",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_postman_id": "get-products-collection-id"
+    "_postman_id": "get-products-collection-id",
+    "name": "Get Products API Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Retrieve all products",
+      "name": "Get Products - Data Driven",
       "request": {
-        "method": "{{Method}}",
+        "method": "GET",
         "header": [
           {
             "key": "Content-Type",
@@ -53,49 +53,17 @@
           "listen": "test",
           "script": {
             "exec": [
-              "// Basic status code validation",
-              "pm.test(\"Status code is {{ExpectedStatus}}\", function () {",
-              "    pm.response.to.have.status(parseInt(data.ExpectedStatus));",
+              "console.log(' TestCase:', data.TestCaseID);",
+              "",
+              "pm.test(\"Status code is \" + data.ExpectedStatus, function () {",
+              "    const expected = parseInt(data.ExpectedStatus);",
+              "    pm.expect(pm.response.code).to.equal(expected);",
               "});"
             ],
             "type": "text/javascript"
           }
         }
       ]
-    }
-  ],
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:8091"
-    },
-    {
-      "key": "Method",
-      "value": "GET"
-    },
-    {
-      "key": "by_brand",
-      "value": ""
-    },
-    {
-      "key": "by_category",
-      "value": ""
-    },
-    {
-      "key": "is_rental",
-      "value": ""
-    },
-    {
-      "key": "between",
-      "value": ""
-    },
-    {
-      "key": "sort",
-      "value": ""
-    },
-    {
-      "key": "ExpectedStatus",
-      "value": "200"
     }
   ]
 }
