@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "get-products-collection-id"
+  },
+  "item": [
+    {
+      "name": "Retrieve all products",
+      "request": {
+        "method": "{{Method}}",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/products?by_brand={{by_brand}}&by_category={{by_category}}&is_rental={{is_rental}}&between={{between}}&sort={{sort}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "by_brand",
+              "value": "{{by_brand}}"
+            },
+            {
+              "key": "by_category",
+              "value": "{{by_category}}"
+            },
+            {
+              "key": "is_rental",
+              "value": "{{is_rental}}"
+            },
+            {
+              "key": "between",
+              "value": "{{between}}"
+            },
+            {
+              "key": "sort",
+              "value": "{{sort}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Basic status code validation",
+              "pm.test(\"Status code is {{ExpectedStatus}}\", function () {",
+              "    pm.response.to.have.status(parseInt(data.ExpectedStatus));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8091"
+    },
+    {
+      "key": "Method",
+      "value": "GET"
+    },
+    {
+      "key": "by_brand",
+      "value": ""
+    },
+    {
+      "key": "by_category",
+      "value": ""
+    },
+    {
+      "key": "is_rental",
+      "value": ""
+    },
+    {
+      "key": "between",
+      "value": ""
+    },
+    {
+      "key": "sort",
+      "value": ""
+    },
+    {
+      "key": "ExpectedStatus",
+      "value": "200"
+    }
+  ]
+}

@@ -66,9 +66,9 @@ jobs:
     - name: Run Newman Tests 🚀
       run: |
         mkdir -p reports
-        newman run ./test/Login_API_Tests.postman_collection.json \
-          --environment ./test/environment.json \
-          --iteration-data ./test/user_account.csv \
+        newman run ./test/api/Login_API_Tests.postman_collection.json \
+          --environment ./test/api/environment.json \
+          --iteration-data ./test/api/user_account.csv \
           --reporters cli
 
     # Bước 8: Upload báo cáo (luôn chạy)
