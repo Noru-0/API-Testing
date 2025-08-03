@@ -24,6 +24,13 @@ fi
 
 # Run tests
 # TODO (Bạn thêm code ở dưới đây)
+echo "🧪 Running Newman tests with CSV data..."
+
+newman run test/api/Login_API_Tests.postman_collection.json \
+    --environment test/api/environment.json \
+    --iteration-data test/api/user_account.csv \
+    --reporters cli,htmlextra \
+    --reporter-htmlextra-export reports/login_api_report.html
 
 # Cleanup (optional)
 docker compose down
