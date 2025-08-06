@@ -27,6 +27,7 @@ jobs:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
       run: |
         echo "🔧 Creating Laravel .env file from .env.ci template..."
+        # Lệnh envsubst sẽ đọc file .env.ci, tìm các biến $VAR và thay bằng giá trị từ secrets
         envsubst < sprint5-with-bugs/API/.env.ci > sprint5-with-bugs/API/.env
         echo "✅ .env file created successfully."
 
