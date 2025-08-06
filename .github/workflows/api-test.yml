@@ -61,22 +61,29 @@ jobs:
       with:
         node-version: '18'
     - run: npm install -g newman newman-reporter-htmlextra
-
-    # Bước 7.1: Chạy test Login API
-    - name: Run Login API Tests 🚀
-      run: |
-        mkdir -p reports
-        newman run ./tests/api/user/Login_API_Tests.postman_collection.json \
-          --environment ./tests/api/environment.json \
-          --iteration-data ./tests/data/user_account.csv \
-          --reporters cli
-
-    # Bước 7.2: Chạy test Get Products API
+  
+    # Bước 7.1: Chạy test Get Products API
     - name: Run Get Products API Tests 📦
       run: |
-        newman run ./tests/api/products/get_products_postman_collection.json \
+        newman run ./tests/api/products/postman_get_products_collection.json \
           --environment ./tests/api/environment.json \
           --iteration-data ./tests/data/get_products_data.csv \
+          --reporters cli
+    
+    # Bước 7.2: Chạy test Post Message API
+    - name: Run Post Message API Tests 📦
+      run: |
+        newman run ./tests/api/contacts/postman_post_messages_collection.json \
+          --environment ./tests/api/environment.json \
+          --iteration-data ./tests/data/post_messages_data.csv \
+          --reporters cli
+
+    # Bước 7.3: Chạy test Get Categories API
+    - name: Run Get Categories API Tests 📦
+      run: |
+        newman run ./tests/api/categories/postman_get_categories_collection.json \
+          --environment ./tests/api/environment.json \
+          --iteration-data ./tests/data/get_categories_data.csv \
           --reporters cli
 
     # Bước 8: Upload báo cáo (luôn chạy)

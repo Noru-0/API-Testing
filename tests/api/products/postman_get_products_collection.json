@@ -1,0 +1,72 @@
+{
+  "info": {
+    "name": "API Test - GET /products",
+    "_postman_id": "12345678-1234-1234-1234-123456789abc",
+    "description": "Postman collection to test GET /products API with data-driven testing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /products - Data Driven Test",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/products",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is expected\", function () {",
+              "    pm.response.to.have.status(parseInt(data.ExpectedStatus));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Build query params dynamically from CSV data",
+              "let params = ['by_brand', 'by_category', 'is_rental', 'between', 'sort'];",
+              "let queryString = [];",
+              "params.forEach(function (key) {",
+              "    if (data[key] && data[key] !== '') {",
+              "        queryString.push(key + '=' + encodeURIComponent(data[key]));",
+              "    }",
+              "});",
+              "let finalUrl = pm.variables.get(\"base_url\") + '/products';",
+              "if (queryString.length > 0) {",
+              "    finalUrl += '?' + queryString.join('&');",
+              "}",
+              "pm.request.url = finalUrl;"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.practicesoftwaretesting.com"
+    }
+  ]
+}

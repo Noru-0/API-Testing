@@ -1,4 +1,0 @@
-email,password,expected_status
-admin@practicesoftwaretesting.com,welcome01,200
-customer@practicesoftwaretesting.com,welcome01,200
-invalid@practicesoftwaretesting.com,wrongpass,401

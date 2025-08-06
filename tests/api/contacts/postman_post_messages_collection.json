@@ -1,0 +1,79 @@
+{
+  "info": {
+    "name": "API Test - POST /messages",
+    "_postman_id": "abcdef12-3456-7890-abcd-ef1234567890",
+    "description": "Collection to test POST /messages endpoint with CSV data.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /messages - Data Driven Test",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{base_url}}/messages",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "messages"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Set HTTP method dynamically",
+              "if (data.method) {",
+              "    pm.request.method = data.method.toUpperCase();",
+              "}",
+              "",
+              "// Build request body from CSV",
+              "let body = {",
+              "    name: data.name || \"\",",
+              "    email: data.email || \"\",",
+              "    subject: data.subject || \"\",",
+              "    message: data.message || \"\"",
+              "};",
+              "pm.request.body.raw = JSON.stringify(body);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is as expected\", function () {",
+              "    pm.response.to.have.status(parseInt(data.ExpectedStatus));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.practicesoftwaretesting.com"
+    }
+  ]
+}
