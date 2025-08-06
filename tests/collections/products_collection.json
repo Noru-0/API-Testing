@@ -158,38 +158,7 @@
               "});",
               "",
               "// Log test results for analysis",
-              "console.log(`Test completed: ${testCase} | Status: ${pm.response.code} | Time: ${pm.response.responseTime}ms | Technique: ${technique}`);",
-              "        pm.expect(product).to.have.property('id');",
-              "        pm.expect(product).to.have.property('name');",
-              "        pm.expect(product).to.have.property('price');",
-              "    }",
-              "});",
-              "",
-              "// Data-driven test for pagination if provided",
-              "const testData = pm.iterationData.toObject();",
-              "if (testData.page) {",
-              "    pm.test(`Page ${testData.page} - Response contains correct pagination`, function () {",
-              "        const responseJson = pm.response.json();",
-              "        if (responseJson.current_page) {",
-              "            pm.expect(responseJson.current_page).to.equal(parseInt(testData.page));",
-              "        }",
-              "    });",
-              "}",
-              "",
-              "if (testData.limit) {",
-              "    pm.test(`Limit ${testData.limit} - Response respects limit parameter`, function () {",
-              "        const responseJson = pm.response.json();",
-              "        if (responseJson.data && responseJson.per_page) {",
-              "            pm.expect(responseJson.per_page).to.equal(parseInt(testData.limit));",
-              "        }",
-              "    });",
-              "}",
-              "",
-              "if (testData.expected_status) {",
-              "    pm.test(`Expected status ${testData.expected_status}`, function () {",
-              "        pm.response.to.have.status(parseInt(testData.expected_status));",
-              "    });",
-              "}"
+              "console.log(`Test completed: ${testCase} | Status: ${pm.response.code} | Time: ${pm.response.responseTime}ms | Technique: ${technique}`);"
             ],
             "type": "text/javascript"
           }
@@ -201,6 +170,12 @@
           {
             "key": "Accept",
             "value": "{{content_type}}"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "description": "Optional JWT Bearer token",
+            "disabled": true
           }
         ],
         "url": {

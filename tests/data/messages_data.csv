@@ -1,10 +1,7 @@
 test_case,first_name,last_name,email,subject,message,expected_status,description,technique
-# Equivalence Partitioning - Valid Class
 ep_valid_normal,John,Doe,john.doe@email.com,Product Inquiry,I would like to know more about your products,201,EP: Valid complete message,EP
 ep_valid_long_names,Christopher,Johnson,chris.johnson@company.com,Technical Support,This is a detailed technical support request with comprehensive information,201,EP: Valid with longer content,EP
 ep_valid_special_chars,José,O'Connor,jose.oconnor@email.com,Question: Pricing & Availability,Hello! I'm interested in your products. Could you help?,201,EP: Valid with special characters,EP
-
-# Boundary Value Analysis - Field lengths
 bva_firstname_min,A,Smith,a.smith@email.com,Test,Short message,201,BVA: Minimum first name length,BVA
 bva_firstname_max,Abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz,Smith,long.name@email.com,Test,Message with very long first name,201,BVA: Maximum first name length,BVA
 bva_lastname_min,John,B,john.b@email.com,Test,Short message,201,BVA: Minimum last name length,BVA
@@ -15,38 +12,26 @@ bva_subject_min,John,Doe,john@email.com,A,Short subject test,201,BVA: Minimum su
 bva_subject_max,John,Doe,john@email.com,This is a very long subject line that tests the maximum allowed length for subject field and should still be acceptable by the system,Test message,201,BVA: Maximum subject length,BVA
 bva_message_min,John,Doe,john@email.com,Test,A,201,BVA: Minimum message length,BVA
 bva_message_max,John,Doe,john@email.com,Long Message,This is an extremely long message that contains a lot of text to test the maximum length boundaries of the message field. It should include enough content to verify that the system can handle large amounts of text input without any issues. This message continues with more text to reach the boundary limits.,201,BVA: Maximum message length,BVA
-
-# Negative Testing - Missing required fields
 neg_missing_firstname,,Doe,john.doe@email.com,Missing First Name,Message without first name,422,Negative: Missing first name,Negative
 neg_missing_lastname,John,,john.doe@email.com,Missing Last Name,Message without last name,422,Negative: Missing last name,Negative
 neg_missing_email,John,Doe,,Missing Email,Message without email,422,Negative: Missing email,Negative
 neg_missing_subject,John,Doe,john.doe@email.com,,Message without subject,422,Negative: Missing subject,Negative
 neg_missing_message,John,Doe,john.doe@email.com,Empty Message,,422,Negative: Missing message,Negative
-
-# Negative Testing - Invalid data formats
 neg_invalid_email_format,John,Doe,invalid-email,Invalid Email,Message with invalid email format,422,Negative: Invalid email format,Negative
 neg_invalid_email_no_at,John,Doe,invalidemail.com,Invalid Email,Email without @ symbol,422,Negative: Email without @,Negative
 neg_invalid_email_no_domain,John,Doe,invalid@,Invalid Email,Email without domain,422,Negative: Email without domain,Negative
 neg_invalid_email_spaces,John,Doe,john doe@email.com,Invalid Email,Email with spaces,422,Negative: Email with spaces,Negative
 neg_special_chars_names,<script>,</script>,test@email.com,XSS Test,XSS injection test,422,Negative: XSS in names,Negative
 neg_sql_injection,John'; DROP TABLE users; --,Doe,test@email.com,SQL Injection,SQL injection test,422,Negative: SQL injection attempt,Negative
-
-# Negative Testing - Empty strings vs null
 neg_empty_firstname, ,Doe,john@email.com,Test,Empty space as first name,422,Negative: Empty space first name,Negative
 neg_empty_lastname,John, ,john@email.com,Test,Empty space as last name,422,Negative: Empty space last name,Negative
 neg_empty_email,John,Doe, ,Test,Empty space as email,422,Negative: Empty space email,Negative
-
-# Combinatorial Testing - Multiple invalid combinations
 combo_all_missing,,,,,,422,Combo: All fields missing,Combinatorial
 combo_names_missing,,,,Test Subject,Valid message content,422,Combo: Both names missing,Combinatorial
 combo_contact_missing,John,Doe,,,Valid message content,422,Combo: Email and subject missing,Combinatorial
 combo_invalid_email_missing_subject,John,Doe,invalid-email,,Test message,422,Combo: Invalid email + missing subject,Combinatorial
 combo_long_names_invalid_email,VeryLongFirstNameThatExceedsNormalLimits,VeryLongLastNameThatExceedsNormalLimits,not-an-email,Test,Message with multiple issues,422,Combo: Long names + invalid email,Combinatorial
-
-# Edge Cases - Unicode and international
 edge_unicode_names,王,李,wang.li@email.com,测试主题,Unicode测试消息,201,Edge: Unicode characters,Edge
 edge_emoji_content,John😀,Doe🎉,john@email.com,Hello 👋,Great service! 🎊 Very happy! 😊,201,Edge: Emoji characters,Edge
 edge_mixed_languages,José María,González,jose@email.com,Consulta técnica,Hola! Tengo una pregunta sobre el producto. ¿Podrían ayudarme?,201,Edge: Mixed languages,Edge
-
-# Performance Testing Data
 perf_stress_test,John,Doe,john@email.com,Stress Test,Normal message for performance testing,201,Performance: Standard load test,Performance

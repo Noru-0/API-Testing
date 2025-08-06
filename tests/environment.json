@@ -16,6 +16,18 @@
       "key": "content_type",
       "value": "application/json",
       "enabled": true
+    },
+    {
+      "key": "auth_email",
+      "value": "admin@example.com",
+      "enabled": true,
+      "description": "Default email for authentication"
+    },
+    {
+      "key": "auth_password",
+      "value": "password",
+      "enabled": true,
+      "description": "Default password for authentication"
     }
   ]
 }

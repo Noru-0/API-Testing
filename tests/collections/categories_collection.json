@@ -255,6 +255,12 @@
           {
             "key": "Accept",
             "value": "{{content_type}}"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "description": "Optional JWT Bearer token",
+            "disabled": true
           }
         ],
         "url": {

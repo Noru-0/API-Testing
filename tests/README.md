@@ -26,8 +26,10 @@ tests/
 
 ### 2. **POST /api/messages**
 - Send new contact message
+- **🔐 Authentication Support**: Automatic JWT token retrieval
 - Test data: `messages_data.csv` (**35 test cases**)
 - Techniques: EP, BVA, Negative, Combinatorial, Edge Cases, Security
+- **Auth Flow**: GET /auth/login → POST /messages với Bearer token
 
 ### 3. **GET /api/categories/tree**
 - Retrieve categories tree structure (including subcategories)  
@@ -68,6 +70,9 @@ File `environment.json` chứa các biến môi trường:
 - `base_url`: http://localhost:8091/api
 - `api_timeout`: 10000
 - `content_type`: application/json
+- **🔐 Authentication variables**:
+  - `auth_email`: admin@example.com (default auth credentials)
+  - `auth_password`: password (default auth credentials)
 
 ## Data-Driven Testing
 
@@ -96,15 +101,21 @@ File `environment.json` chứa các biến môi trường:
 
 ## Cách sử dụng
 
+### **🔐 With Authentication Support:**
 1. **Import Environment**: Import file `environment.json` vào Postman
 2. **Import Collections**: Import các file collection từ thư mục `collections/`
-3. **Set up Data Files**: Khi chạy collection, chọn data file tương ứng từ thư mục `data/`
+3. **Authentication**: Messages collection tự động lấy JWT token từ `/auth/login`
 4. **Run Tests**: Chạy collection với data file để thực hiện data-driven testing
+
+### **📋 Available Scripts:**
+- `run-api-tests.ps1` / `run-api-tests.sh` - Basic testing scripts
+- **`run-api-tests-with-auth.ps1` / `run-api-tests-with-auth.sh`** - Enhanced scripts với auth support
 
 ## Test Cases
 
 Mỗi collection bao gồm **advanced test validations**:
-- ✅ **Status Code Validation** (200, 201, 400, 422) với technique-specific logic
+- ✅ **Status Code Validation** (200, 201, 400, 401, 422) với technique-specific logic
+- 🔐 **Authentication Handling** (Automatic token retrieval và 401 response validation)
 - ⏱️ **Response Time Validation** (< 2-5s depending on test type)
 - 📄 **Content-Type Validation** (application/json)
 - 🏗️ **Response Structure Validation** với field-level checking
@@ -121,13 +132,17 @@ Mỗi collection bao gồm **advanced test validations**:
 ## Notes
 
 - Tất cả API endpoints được prefix với `/api`
+- **🔐 Authentication**: Messages API có authentication support với JWT tokens
+- **Auth flow**: GET `/auth/login` để lấy token → POST `/messages` với Bearer token
+- **Auth credentials**: Có thể config trong environment variables (`auth_email`, `auth_password`)
+- **Fallback**: Nếu auth fail, tests sẽ show 401 responses và continue testing
 - Base URL có thể được thay đổi trong environment variables
 - Collections hỗ trợ cả positive và negative test cases
 - **Data files bao gồm 82 total test cases** với comprehensive coverage:
   - **30 test cases** cho Products pagination testing
-  - **35 test cases** cho Messages validation testing  
+  - **35 test cases** cho Messages validation testing (với auth support)  
   - **17 test cases** cho Categories tree testing
 - **Testing techniques đầy đủ**: EP, BVA, Negative, Combinatorial, Edge Cases, Security
-- **Advanced validations**: Field-level validation, security testing, performance monitoring
-- **Comprehensive logging**: Detailed test results với technique và performance metrics
-- Focus vào 3 endpoints chính: GET /products, POST /messages, GET /categories/tree
+- **Advanced validations**: Field-level validation, security testing, performance monitoring, authentication testing
+- **Comprehensive logging**: Detailed test results với technique, performance metrics, và auth status
+- Focus vào 3 endpoints chính: GET /products, POST /messages (with auth), GET /categories/tree
