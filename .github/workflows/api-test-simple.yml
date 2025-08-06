@@ -27,7 +27,7 @@ jobs:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
       run: |
         echo "🔧 Creating Laravel .env file from .env.ci template..."
-        envsubst < sprint5/API/.env.ci > sprint5/API/.env
+        envsubst < sprint5-with-bugs/API/.env.ci > sprint5-with-bugs/API/.env
         echo "✅ .env file created successfully."
 
     # Bước 3: Khởi động các container Docker
