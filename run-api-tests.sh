@@ -1,10 +1,9 @@
 #!/bin/bash
 
-echo "🚀 Starting API Login Tests..."
+echo "🚀 Starting API Tests..."
 
 # Start Docker services
 echo "📦 Starting Docker containers..."
-# docker-compose up -d
 docker compose -f docker-compose.yml up -d --force-recreate
 
 # Wait for services
@@ -22,15 +21,35 @@ if ! command -v newman &> /dev/null; then
     npm install -g newman newman-reporter-htmlextra
 fi
 
-# Run tests
-# TODO (Bạn thêm code ở dưới đây)
-echo "🧪 Running Newman tests with CSV data..."
+# Ensure reports directory exists
+mkdir -p reports
 
-newman run test/api/Login_API_Tests.postman_collection.json \
-    --environment test/api/environment.json \
-    --iteration-data test/api/user_account.csv \
+# Run Products API tests
+echo "🧪 Running Products API tests..."
+newman run tests/collections/products_collection.json \
+    --environment tests/environment.json \
+    --iteration-data tests/data/products_pagination_data.csv \
     --reporters cli,htmlextra \
-    --reporter-htmlextra-export reports/login_api_report.html
+    --reporter-htmlextra-export reports/products_api_report.html
+
+# Run Messages API tests
+echo "📧 Running Messages API tests..."
+newman run tests/collections/messages_collection.json \
+    --environment tests/environment.json \
+    --iteration-data tests/data/messages_data.csv \
+    --reporters cli,htmlextra \
+    --reporter-htmlextra-export reports/messages_api_report.html
+
+# Run Categories API tests
+echo "📂 Running Categories API tests..."
+newman run tests/collections/categories_collection.json \
+    --environment tests/environment.json \
+    --iteration-data tests/data/categories_pagination_data.csv \
+    --reporters cli,htmlextra \
+    --reporter-htmlextra-export reports/categories_api_report.html
+
+echo "✅ All tests completed! Check the reports directory for detailed results."
 
 # Cleanup (optional)
+echo "🧹 Stopping Docker containers..."
 docker compose down

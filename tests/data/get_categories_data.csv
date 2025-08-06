@@ -1,6 +1,0 @@
-TestCaseID,by_category_slug,method,ExpectedStatus
-TC_Get_Cat_01,,GET,200
-TC_Get_Cat_02,electronics,GET,200
-TC_Get_Cat_03,@@@,GET,404
-TC_Get_Cat_04,nonexistent-slug,GET,404
-TC_Get_Cat_05,,POST,405

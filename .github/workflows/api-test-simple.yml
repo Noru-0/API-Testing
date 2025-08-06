@@ -1,5 +1,5 @@
-# Tên của quy trình CI/CD
-name: Laravel CI/CD with Newman Tests
+# API Testing for 3 Specific Endpoints
+name: "API Testing - Simple"
 
 on:
   push:
@@ -27,8 +27,7 @@ jobs:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
       run: |
         echo "🔧 Creating Laravel .env file from .env.ci template..."
-        # Lệnh envsubst sẽ đọc file .env.ci, tìm các biến $VAR và thay bằng giá trị từ secrets
-        envsubst < sprint5-with-bugs/API/.env.ci > sprint5-with-bugs/API/.env
+        envsubst < sprint5/API/.env.ci > sprint5/API/.env
         echo "✅ .env file created successfully."
 
     # Bước 3: Khởi động các container Docker
@@ -44,15 +43,12 @@ jobs:
     - name: Setup Application 🔧
       run: |
         echo "📦 Installing Composer dependencies..."
-        # Sử dụng service 'composer' đã định nghĩa trong docker-compose.yml
         docker compose run --rm composer
         
         echo "🔒 Fixing permissions..."
-        # Gán quyền truy cập cho thư mục storage và cache
         docker compose exec -T -u root laravel-api chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
         
         echo "🗄️ Running database migrations and seeding..."
-        # Chạy migrate & seed
         docker compose exec -T laravel-api php artisan migrate:fresh --seed --force
 
     # Bước 6: Cài đặt Node.js và Newman
@@ -61,34 +57,51 @@ jobs:
       with:
         node-version: '18'
     - run: npm install -g newman newman-reporter-htmlextra
-  
-    # Bước 7.1: Chạy test Get Products API
-    - name: Run Get Products API Tests 📦
+
+    # Bước 7: Tạo thư mục reports
+    - name: Create Reports Directory 📁
+      run: mkdir -p reports
+
+    # Bước 8.1: Test GET /products
+    - name: Run Products API Tests 📦
       run: |
-        newman run ./tests/api/products/postman_get_products_collection.json \
-          --environment ./tests/api/environment.json \
-          --iteration-data ./tests/data/get_products_data.csv \
-          --reporters cli
+        echo "🧪 Testing GET /products..."
+        newman run ./tests/collections/products_collection.json \
+          --environment ./tests/environment.json \
+          --iteration-data ./tests/data/products_pagination_data.csv \
+          --reporters cli \
+          --reporter-htmlextra-export reports/products_report.html
     
-    # Bước 7.2: Chạy test Post Message API
-    - name: Run Post Message API Tests 📦
+    # Bước 8.2: Test POST /messages
+    - name: Run Messages API Tests 📧
       run: |
-        newman run ./tests/api/contacts/postman_post_messages_collection.json \
-          --environment ./tests/api/environment.json \
-          --iteration-data ./tests/data/post_messages_data.csv \
-          --reporters cli
+        echo "📧 Testing POST /messages..."
+        newman run ./tests/collections/messages_collection.json \
+          --environment ./tests/environment.json \
+          --iteration-data ./tests/data/messages_data.csv \
+          --reporters cli \
+          --reporter-htmlextra-export reports/messages_report.html
 
-    # Bước 7.3: Chạy test Get Categories API
-    - name: Run Get Categories API Tests 📦
+    # Bước 8.3: Test GET /categories/tree
+    - name: Run Categories API Tests 📂
       run: |
-        newman run ./tests/api/categories/postman_get_categories_collection.json \
-          --environment ./tests/api/environment.json \
-          --iteration-data ./tests/data/get_categories_data.csv \
-          --reporters cli
+        echo "📂 Testing GET /categories/tree..."
+        newman run ./tests/collections/categories_collection.json \
+          --environment ./tests/environment.json \
+          --iteration-data ./tests/data/categories_tree_data.csv \
+          --reporters cli \
+          --reporter-htmlextra-export reports/categories_tree_report.html
 
-    # Bước 8: Upload báo cáo (luôn chạy)
+    # Bước 9: Upload báo cáo HTML
+    - name: Upload Test Reports 📊
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: newman-test-reports
+        path: reports/
+        retention-days: 30
 
-    # Bước 9: Dọn dẹp (luôn chạy)
+    # Bước 10: Dọn dẹp
     - name: Cleanup 🧹
       if: always()
       run: docker compose down -v

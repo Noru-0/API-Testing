@@ -11,6 +11,11 @@
       "key": "api_timeout",
       "value": "10000",
       "enabled": true
+    },
+    {
+      "key": "content_type",
+      "value": "application/json",
+      "enabled": true
     }
   ]
 }

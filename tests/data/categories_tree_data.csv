@@ -1,0 +1,36 @@
+test_case,query_param,filter_param,expected_status,description,technique,validation_focus
+# Equivalence Partitioning - Valid requests
+ep_basic_tree,,200,EP: Basic tree structure request,EP,tree_structure
+ep_with_filter,active,200,EP: Tree with active filter,EP,filtered_tree
+ep_full_tree,all,200,EP: Full tree with all categories,EP,complete_tree
+
+# Boundary Value Analysis - Parameter testing
+bva_empty_filter,,200,BVA: Empty filter parameter,BVA,default_behavior
+bva_null_filter,null,200,BVA: Null filter handling,BVA,null_handling
+bva_max_depth,depth=5,200,BVA: Maximum depth parameter,BVA,depth_limit
+
+# Negative Testing - Invalid parameters
+neg_invalid_filter,invalid_filter,400,Negative: Invalid filter value,Negative,error_handling
+neg_malformed_param,filter=<script>,400,Negative: XSS attempt in parameter,Negative,security_validation
+neg_sql_injection,filter='; DROP TABLE categories; --,400,Negative: SQL injection attempt,Negative,security_validation
+neg_long_param,filter=very_long_parameter_that_exceeds_normal_limits_and_should_be_rejected,400,Negative: Extremely long parameter,Negative,input_validation
+
+# Combinatorial Testing - Multiple parameters
+combo_multiple_filters,active&featured,200,Combo: Multiple valid filters,Combinatorial,multi_filter_logic
+combo_invalid_combinations,invalid&null,400,Combo: Invalid filter combinations,Combinatorial,error_handling
+combo_mixed_valid_invalid,active&invalid,400,Combo: Mixed valid/invalid filters,Combinatorial,partial_validation
+
+# Edge Cases - Special scenarios
+edge_performance_load,,200,Edge: Performance under load,Edge,response_time
+edge_concurrent_request,,200,Edge: Concurrent request handling,Edge,consistency
+edge_unicode_filter,category=测试,200,Edge: Unicode in parameters,Edge,unicode_support
+edge_special_chars,category=@#$%,400,Edge: Special characters in filter,Edge,char_validation
+
+# Performance Testing
+perf_baseline,,200,Performance: Baseline measurement,Performance,response_time
+perf_stress_test,,200,Performance: Stress test scenario,Performance,system_stability
+
+# Data Validation Focus Areas
+validate_hierarchy,,200,Validation: Tree hierarchy integrity,Validation,parent_child_relations
+validate_completeness,,200,Validation: Data completeness check,Validation,all_required_fields
+validate_consistency,,200,Validation: Data consistency across requests,Validation,data_integrity
