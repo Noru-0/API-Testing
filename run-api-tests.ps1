@@ -1,17 +1,17 @@
 ﻿Write-Host "🚀 Starting API Tests..."
 
-# Start Docker services
-Write-Host "📦 Starting Docker containers..."
-docker compose -f docker-compose.yml up -d --force-recreate
+# # Start Docker services
+# Write-Host "📦 Starting Docker containers..."
+# docker compose -f docker-compose.yml up -d --force-recreate
 
-# Wait for services
-Write-Host "⏳ Waiting for services to be ready..."
-Start-Sleep -Seconds 30
+# # Wait for services
+# Write-Host "⏳ Waiting for services to be ready..."
+# Start-Sleep -Seconds 30
 
-# Setup database
-Write-Host "🗄️ Setting up database..."
-docker compose exec laravel-api php artisan migrate --force
-docker compose exec laravel-api php artisan db:seed --force
+# # Setup database
+# Write-Host "🗄️ Setting up database..."
+# docker compose exec laravel-api php artisan migrate --force
+# docker compose exec laravel-api php artisan db:seed --force
 
 # Define path to newman.cmd
 $NEWMAN = Join-Path $env:APPDATA "npm\newman.cmd"

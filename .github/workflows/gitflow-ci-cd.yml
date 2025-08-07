@@ -63,46 +63,64 @@ jobs:
     - name: Create Reports Directory 📁
       run: mkdir -p reports
 
-    # Bước 8.1: Test GET /products
+    # Bước 8.1: Test GET /products - Data-driven testing with 28 test cases
     - name: Run Products API Tests 📦
       run: |
-        echo "🧪 Testing GET /products..."
-        newman run ./tests/collections/products_collection.json \
-          --environment ./tests/environment.json \
-          --iteration-data ./tests/data/products_pagination_data.csv \
-          --reporters cli \
-          --reporter-htmlextra-export reports/products_report.html
+        echo "🧪 Testing GET /products (Data-Driven - 28 test cases)..."
+        newman run ./tests/collections/products-data-driven-collection.json \
+          --environment ./tests/collections/environment.json \
+          --iteration-data ./tests/data/products-test-data.csv \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export reports/products-data-driven-report.html \
+          --reporter-htmlextra-title "Products API Data-Driven Test Report"
     
-    # Bước 8.2: Test POST /messages
+    # Bước 8.2: Test POST /messages - Data-driven testing with 25 test cases
     - name: Run Messages API Tests 📧
       run: |
-        echo "📧 Testing POST /messages..."
-        newman run ./tests/collections/messages_collection.json \
-          --environment ./tests/environment.json \
-          --iteration-data ./tests/data/messages_data.csv \
-          --reporters cli \
-          --reporter-htmlextra-export reports/messages_report.html
+        echo "📧 Testing POST /messages (Data-Driven - 25 test cases)..."
+        newman run ./tests/collections/messages-data-driven-collection.json \
+          --environment ./tests/collections/environment.json \
+          --iteration-data ./tests/data/messages-test-data.csv \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export reports/messages-data-driven-report.html \
+          --reporter-htmlextra-title "Messages API Data-Driven Test Report"
 
-    # Bước 8.3: Test GET /categories/tree
+    # Bước 8.3: Test GET /categories/tree - Data-driven testing with 28 test cases
     - name: Run Categories API Tests 📂
       run: |
-        echo "📂 Testing GET /categories/tree..."
-        newman run ./tests/collections/categories_collection.json \
-          --environment ./tests/environment.json \
-          --iteration-data ./tests/data/categories_tree_data.csv \
-          --reporters cli \
-          --reporter-htmlextra-export reports/categories_tree_report.html
+        echo "📂 Testing GET /categories/tree (Data-Driven - 28 test cases)..."
+        newman run ./tests/collections/categories-tree-data-driven-collection.json \
+          --environment ./tests/collections/environment.json \
+          --iteration-data ./tests/data/categories-tree-test-data.csv \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export reports/categories-tree-data-driven-report.html \
+          --reporter-htmlextra-title "Categories Tree API Data-Driven Test Report"
 
-    # Bước 9: Upload báo cáo HTML
+    # Bước 9: Tổng kết kết quả test
+    - name: Test Summary 📊
+      if: always()
+      run: |
+        echo "📋 API Testing Summary - Data-Driven Testing Results:"
+        echo "- Products API: GET /products (28 comprehensive test scenarios)"
+        echo "- Messages API: POST /messages (25 validation & security test scenarios)" 
+        echo "- Categories Tree API: GET /categories/tree (28 hierarchy & filtering scenarios)"
+        echo "- Total: 81 data-driven test cases covering all edge cases"
+        echo ""
+        echo "📊 HTML Reports generated in reports/ directory:"
+        echo "- products-data-driven-report.html"
+        echo "- messages-data-driven-report.html"
+        echo "- categories-tree-data-driven-report.html"
+
+    # Bước 10: Upload báo cáo HTML
     - name: Upload Test Reports 📊
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: newman-test-reports
+        name: newman-test-reports-data-driven
         path: reports/
         retention-days: 30
 
-    # Bước 10: Dọn dẹp
+    # Bước 11: Dọn dẹp
     - name: Cleanup 🧹
       if: always()
       run: docker compose down -v
