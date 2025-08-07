@@ -1,39 +1,39 @@
 #!/bin/bash
 
-# API Testing Script - Data-Driven Testing for 3 Main Endpoints
-# This script runs comprehensive tests for Products, Messages, and Categories APIs
+echo "🚀 Starting API Tests..."
 
-echo "🚀 API Automation Testing - Data-Driven Approach"
-echo "Testing 3 main endpoints with comprehensive test scenarios"
+# Step 1: Start Docker services
+echo "📦 Starting Docker containers..."
+docker compose -f docker-compose.yml up -d --force-recreate
 
-# Check if Newman is installed
-if command -v newman >/dev/null 2>&1; then
-    echo "✅ Newman is available: $(newman --version)"
-else
-    echo "❌ Newman is not installed. Installing Newman..."
+# Step 2: Wait for services to be ready
+echo "⏳ Waiting for services to be ready..."
+sleep 30
+
+# Step 3: Setup database (migration & seed)
+echo "🗄️ Setting up database..."
+docker compose exec laravel-api php artisan migrate --force
+docker compose exec laravel-api php artisan db:seed --force
+
+# Step 4: Check if Newman is installed
+if ! command -v newman &> /dev/null
+then
+    echo "📥 Installing Newman and HTML Extra Reporter..."
     npm install -g newman newman-reporter-htmlextra
-    if [ $? -ne 0 ]; then
-        echo "❌ Failed to install Newman. Please install Node.js and try again."
-        exit 1
-    fi
 fi
 
-# Create reports directory
-if [ ! -d "reports" ]; then
-    mkdir -p reports
+# Step 5: Create reports directory
+REPORTS_DIR="reports"
+if [ ! -d "$REPORTS_DIR" ]; then
+    mkdir -p "$REPORTS_DIR"
     echo "📁 Created reports directory"
 fi
 
-# Set up common variables
+# Common variables
 ENV_FILE="./tests/collections/environment.json"
-REPORTS_DIR="./reports"
 
-echo "🔧 Environment file: $ENV_FILE"
-echo "📊 Reports directory: $REPORTS_DIR"
-
-# Test 1: GET /products - Data-driven testing with 28 test cases
-echo ""
-echo "📦 Testing GET /products (Data-Driven - 28 test cases)..."
+# Step 6: Run Products API Tests (28 test cases)
+echo "🧪 Running Products API tests (Data-Driven - 28 test cases)..."
 newman run "./tests/collections/products-data-driven-collection.json" \
     --environment "$ENV_FILE" \
     --iteration-data "./tests/data/products-test-data.csv" \
@@ -41,15 +41,8 @@ newman run "./tests/collections/products-data-driven-collection.json" \
     --reporter-htmlextra-export "$REPORTS_DIR/products-data-driven-report.html" \
     --reporter-htmlextra-title "Products API Data-Driven Test Report"
 
-if [ $? -eq 0 ]; then
-    echo "✅ Products API tests completed successfully"
-else
-    echo "⚠️ Products API tests completed with some failures"
-fi
-
-# Test 2: POST /messages - Data-driven testing with 25 test cases  
-echo ""
-echo "📧 Testing POST /messages (Data-Driven - 25 test cases)..."
+# Step 7: Run Messages API Tests (25 test cases)
+echo "📧 Running Messages API tests (Data-Driven - 25 test cases)..."
 newman run "./tests/collections/messages-data-driven-collection.json" \
     --environment "$ENV_FILE" \
     --iteration-data "./tests/data/messages-test-data.csv" \
@@ -57,15 +50,8 @@ newman run "./tests/collections/messages-data-driven-collection.json" \
     --reporter-htmlextra-export "$REPORTS_DIR/messages-data-driven-report.html" \
     --reporter-htmlextra-title "Messages API Data-Driven Test Report"
 
-if [ $? -eq 0 ]; then
-    echo "✅ Messages API tests completed successfully"
-else
-    echo "⚠️ Messages API tests completed with some failures"
-fi
-
-# Test 3: GET /categories/tree - Data-driven testing with 28 test cases
-echo ""
-echo "📂 Testing GET /categories/tree (Data-Driven - 28 test cases)..."
+# Step 8: Run Categories API Tests (28 test cases)
+echo "📂 Running Categories API tests (Data-Driven - 28 test cases)..."
 newman run "./tests/collections/categories-tree-data-driven-collection.json" \
     --environment "$ENV_FILE" \
     --iteration-data "./tests/data/categories-tree-test-data.csv" \
@@ -73,34 +59,14 @@ newman run "./tests/collections/categories-tree-data-driven-collection.json" \
     --reporter-htmlextra-export "$REPORTS_DIR/categories-tree-data-driven-report.html" \
     --reporter-htmlextra-title "Categories Tree API Data-Driven Test Report"
 
-if [ $? -eq 0 ]; then
-    echo "✅ Categories Tree API tests completed successfully"
-else
-    echo "⚠️ Categories Tree API tests completed with some failures"
-fi
+# Step 9: Shutdown Docker containers
+echo "🧹 Stopping Docker containers..."
+docker compose down
 
-# Summary
+# Step 10: Summary
 echo ""
-echo "📋 Test Summary - Data-Driven Testing Results:"
-echo "- Products API: GET /products (28 comprehensive test scenarios)"
-echo "- Messages API: POST /messages (25 validation & security test scenarios)"
-echo "- Categories Tree API: GET /categories/tree (28 hierarchy & filtering scenarios)"
-echo "- Total: 81 data-driven test cases covering all edge cases"
-
-echo ""
-echo "📊 HTML Reports generated in: $REPORTS_DIR"
+echo "✅ All tests completed!"
+echo "📊 Reports saved in: $REPORTS_DIR"
 echo "- products-data-driven-report.html"
 echo "- messages-data-driven-report.html"
 echo "- categories-tree-data-driven-report.html"
-
-echo ""
-echo "🎯 Test Coverage:"
-echo "- Basic functionality testing"
-echo "- Input validation & security testing"
-echo "- Edge cases & error handling"
-echo "- Performance & boundary testing"
-echo "- Unicode & special character support"
-
-echo ""
-echo "✨ Data-driven testing completed!"
-echo "📈 Check HTML reports for detailed test results and metrics"
