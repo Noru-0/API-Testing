@@ -1,0 +1,61 @@
+No.,BugID,Status,Requirement Name,Summary,Steps to reproduce,Severity,Frequency,Priority,Attachment (Link to file),Date,Reporter,Build
+1,BUG_PROD_001,New,Product Management,Invalid Category ID returns server error instead of proper error handling,"1. Send GET request to /products?by_category=999 (non-existent category)
+2. Observe response status and error handling
+3. Expected: 404 Not Found or empty results with 200 OK
+4. Actual: 500 Internal Server Error (incorrect error handling)",Minor,Always,Normal,reports/products-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+2,BUG_PROD_002,New,Product Management,Negative page parameter returns server error instead of validation error,"1. Send GET request to /products?page=-1 (invalid negative page)
+2. Observe response status and error handling
+3. Expected: 422 Unprocessable Entity for validation error
+4. Actual: 500 Internal Server Error (incorrect error handling)",Minor,Always,Normal,reports/products-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+3,BUG_PROD_003,New,Product Management,Invalid sort parameter silently ignored instead of returning error,"1. Send GET request to /products?sort=invalid_field
+2. Observe response behavior
+3. Expected: 400 Bad Request for invalid sort field
+4. Actual: 200 OK with default sorting applied (incorrect behavior)",Tweak,Always,Low,reports/products-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+4,BUG_MSG_001,New,Contact Form Security,XSS content stored without proper sanitization,"1. Send POST request to /messages with XSS payload in message content
+2. Include script tags like <script>alert('xss')</script>
+3. Expected: XSS payload sanitized or stripped before storage
+4. Actual: XSS content stored as-is without sanitization (security risk)",Minor,Always,Normal,reports/messages-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+5,BUG_CAT_001,New,Category Management,Performance degradation with large category datasets,"1. Send GET request to /categories/tree (complete tree)
+2. Measure response time with large category hierarchy
+3. Expected: Response time < 5000ms for large datasets
+4. Actual: Response time exceeds 6000ms causing poor user experience",Minor,Always,Normal,reports/categories-tree-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+6,BUG_PROD_004,New,Product Management,Missing rate limiting allows potential API abuse,"1. Send multiple rapid requests to /products endpoint
+2. Observe if rate limiting is enforced
+3. Expected: Rate limiting to prevent API abuse
+4. Actual: No rate limiting detected (potential security risk)",Tweak,Always,Normal,reports/products-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+7,BUG_MSG_002,New,Contact Form,Missing message length validation allows extremely long content,"1. Send POST request to /messages with extremely long message (>10000 chars)
+2. Observe validation behavior
+3. Expected: 422 Validation error for excessive message length
+4. Actual: 200 OK - Message accepted without length validation",Tweak,Always,Low,reports/messages-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+8,BUG_CAT_002,New,Category Management,Missing caching for frequently accessed category tree,"1. Send multiple requests to /categories/tree within short timeframe
+2. Observe response times and caching behavior
+3. Expected: Improved response times through caching mechanism
+4. Actual: Each request processes from database without caching",Tweak,Always,Low,reports/categories-tree-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+9,BUG_PROD_005,New,Product Management,Search query special characters cause inconsistent behavior,"1. Send GET request to /products?q=%$#@ (special characters)
+2. Observe response behavior and error handling
+3. Expected: Consistent handling of special characters in search
+4. Actual: Occasional 500 errors with special character combinations",Tweak,Occasionally,Normal,reports/products-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+10,BUG_MSG_003,New,Contact Form,Unicode character encoding issues in response,"1. Send POST request to /messages with Unicode characters (测试用户)
+2. Retrieve message and observe character encoding
+3. Expected: Proper Unicode character display in responses
+4. Actual: Character encoding issues in some API responses",Trivial,Always,Low,reports/messages-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+11,BUG_CAT_003,New,Category Management,Empty category slug parameter handling inconsistency,"1. Send GET request to /categories/tree?by_category_slug= (empty slug)
+2. Observe response behavior
+3. Expected: Consistent behavior (full tree or validation error)
+4. Actual: Inconsistent responses - sometimes empty array, sometimes full tree",Tweak,Always,Low,reports/categories-tree-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+12,BUG_API_001,New,API Documentation,Missing comprehensive API documentation for query parameters,"1. Review API documentation for all three endpoints
+2. Check parameter descriptions and expected behaviors
+3. Expected: Complete documentation with examples and error codes
+4. Actual: Incomplete documentation missing parameter details and error responses",Text,Always,Normal,N/A,2025-08-07,Test Automation Team,Sprint5
+13,BUG_API_002,New,API Consistency,Inconsistent error response format across endpoints,"1. Test error responses from /products, /messages, and /categories/tree
+2. Compare error response structures
+3. Expected: Consistent error response format across all endpoints
+4. Actual: Different error formats used across different endpoints",Tweak,Always,Normal,N/A,2025-08-07,Test Automation Team,Sprint5
+14,BUG_PROD_006,New,Product Management,Missing input validation for extremely large page numbers,"1. Send GET request to /products?page=999999 (extremely large page)
+2. Observe response and resource usage
+3. Expected: Validation error or reasonable maximum page limit
+4. Actual: No validation for page number upper bounds",Tweak,Always,Low,reports/products-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5
+15,BUG_MSG_004,New,Contact Form,Missing CORS headers for cross-origin requests,"1. Send POST request to /messages from different origin
+2. Observe CORS headers in response
+3. Expected: Proper CORS headers for cross-origin support
+4. Actual: Missing or incomplete CORS configuration",Tweak,Always,Normal,reports/messages-data-driven-report.html,2025-08-07,Test Automation Team,Sprint5

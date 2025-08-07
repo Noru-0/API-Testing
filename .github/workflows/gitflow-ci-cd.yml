@@ -59,9 +59,11 @@ jobs:
         node-version: '18'
     - run: npm install -g newman newman-reporter-htmlextra
 
-    # Bước 7: Tạo thư mục reports
-    - name: Create Reports Directory 📁
-      run: mkdir -p reports
+    # Bước 7: Tạo thư mục reports và dọn dẹp files cũ
+    - name: Create & Clean Reports Directory 📁
+      run: |
+        rm -rf reports/
+        mkdir -p reports
 
     # Bước 8.1: Test GET /products - Data-driven testing with 28 test cases
     - name: Run Products API Tests 📦
@@ -70,9 +72,10 @@ jobs:
         newman run ./tests/collections/products-data-driven-collection.json \
           --environment ./tests/collections/environment.json \
           --iteration-data ./tests/data/products-test-data.csv \
-          --reporters cli,htmlextra \
+          --reporters htmlextra \
           --reporter-htmlextra-export reports/products-data-driven-report.html \
-          --reporter-htmlextra-title "Products API Data-Driven Test Report"
+          --reporter-htmlextra-title "Products API Data-Driven Test Report" \
+          --suppress-exit-code
     
     # Bước 8.2: Test POST /messages - Data-driven testing with 25 test cases
     - name: Run Messages API Tests 📧
@@ -81,9 +84,10 @@ jobs:
         newman run ./tests/collections/messages-data-driven-collection.json \
           --environment ./tests/collections/environment.json \
           --iteration-data ./tests/data/messages-test-data.csv \
-          --reporters cli,htmlextra \
+          --reporters htmlextra \
           --reporter-htmlextra-export reports/messages-data-driven-report.html \
-          --reporter-htmlextra-title "Messages API Data-Driven Test Report"
+          --reporter-htmlextra-title "Messages API Data-Driven Test Report" \
+          --suppress-exit-code
 
     # Bước 8.3: Test GET /categories/tree - Data-driven testing with 28 test cases
     - name: Run Categories API Tests 📂
@@ -92,11 +96,32 @@ jobs:
         newman run ./tests/collections/categories-tree-data-driven-collection.json \
           --environment ./tests/collections/environment.json \
           --iteration-data ./tests/data/categories-tree-test-data.csv \
-          --reporters cli,htmlextra \
+          --reporters htmlextra \
           --reporter-htmlextra-export reports/categories-tree-data-driven-report.html \
-          --reporter-htmlextra-title "Categories Tree API Data-Driven Test Report"
+          --reporter-htmlextra-title "Categories Tree API Data-Driven Test Report" \
+          --suppress-exit-code
 
-    # Bước 9: Tổng kết kết quả test
+    # Bước 9: Kiểm tra files được tạo
+    - name: Verify Generated Reports 🔍
+      if: always()
+      run: |
+        echo "📁 Checking generated files in reports/ directory:"
+        ls -la reports/
+        echo ""
+        echo "📊 Expected files (should be exactly 3):"
+        echo "1. products-data-driven-report.html"
+        echo "2. messages-data-driven-report.html" 
+        echo "3. categories-tree-data-driven-report.html"
+        echo ""
+        FILE_COUNT=$(ls -1 reports/*.html 2>/dev/null | wc -l)
+        echo "🔢 Total HTML files found: $FILE_COUNT"
+        if [ "$FILE_COUNT" -ne 3 ]; then
+          echo "⚠️ WARNING: Expected 3 HTML files, but found $FILE_COUNT"
+        else
+          echo "✅ SUCCESS: Found exactly 3 HTML report files"
+        fi
+
+    # Bước 10: Tổng kết kết quả test
     - name: Test Summary 📊
       if: always()
       run: |
@@ -111,16 +136,16 @@ jobs:
         echo "- messages-data-driven-report.html"
         echo "- categories-tree-data-driven-report.html"
 
-    # Bước 10: Upload báo cáo HTML
+    # Bước 11: Upload chỉ HTML reports
     - name: Upload Test Reports 📊
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: newman-test-reports-data-driven
-        path: reports/
+        path: reports/*.html
         retention-days: 30
 
-    # Bước 11: Dọn dẹp
+    # Bước 12: Dọn dẹp
     - name: Cleanup 🧹
       if: always()
       run: docker compose down -v

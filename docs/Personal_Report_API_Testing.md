@@ -139,7 +139,7 @@ if (expectedStatus === 200) {
 - **Authentication:** Không yêu cầu (public endpoint)
 
 #### Query Parameters:
-```javascript
+```json
 {
   "page": "integer (optional) - Page number for pagination",
   "by_category": "integer (optional) - Filter by category ID", 
@@ -213,7 +213,7 @@ if (expectedStatus === 200) {
 - **Authentication:** Không yêu cầu (public endpoint)
 
 #### Query Parameters:
-```javascript
+```json
 {
   "by_category_slug": "string (optional) - Filter tree by specific category slug"
 }

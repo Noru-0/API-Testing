@@ -2,18 +2,18 @@
 
 echo "🚀 Starting API Tests..."
 
-# # Step 1: Start Docker services
-# echo "📦 Starting Docker containers..."
-# docker compose -f docker-compose.yml up -d --force-recreate
+# Step 1: Start Docker services
+echo "📦 Starting Docker containers..."
+docker compose -f docker-compose.yml up -d --force-recreate
 
-# # Step 2: Wait for services to be ready
-# echo "⏳ Waiting for services to be ready..."
-# sleep 30
+# Step 2: Wait for services to be ready
+echo "⏳ Waiting for services to be ready..."
+sleep 30
 
-# # Step 3: Setup database (migration & seed)
-# echo "🗄️ Setting up database..."
-# docker compose exec laravel-api php artisan migrate --force
-# docker compose exec laravel-api php artisan db:seed --force
+# Step 3: Setup database (migration & seed)
+echo "🗄️ Setting up database..."
+docker compose exec laravel-api php artisan migrate --force
+docker compose exec laravel-api php artisan db:seed --force
 
 # Step 4: Check if Newman is installed
 if ! command -v newman &> /dev/null
