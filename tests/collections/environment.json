@@ -1,0 +1,54 @@
+{
+  "id": "api-test-environment",
+  "name": "API Test Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8091",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "admin_email",
+      "value": "admin@practicesoftwaretesting.com",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "admin_password",
+      "value": "welcome01",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "user_email",
+      "value": "customer@practicesoftwaretesting.com",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "user_password",
+      "value": "welcome01",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "valid_product_id",
+      "value": "1",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "user_token",
+      "value": "",
+      "enabled": true,
+      "type": "default"
+    }
+  ]
+}
