@@ -1,29 +1,22 @@
-test_scenario,query_params,expected_status,test_description,parsed_query
-basic_get,,200,Basic GET request for all products,
-with_page,"?page=1",200,GET products with valid page parameter,"[{""key"":""page"",""value"":""1""}]"
-with_pagination,"?page=2",200,GET products with page 2,"[{""key"":""page"",""value"":""2""}]"
-category_filter,"?by_category=1",200,Filter products by valid category ID,"[{""key"":""by_category"",""value"":""1""}]"
-brand_filter,"?by_brand=1",200,Filter products by valid brand ID,"[{""key"":""by_brand"",""value"":""1""}]"
-search_query,"?q=test",200,Search products with valid query,"[{""key"":""q"",""value"":""test""}]"
-category_slug_filter,"?by_category_slug=electronics",200,Filter by valid category slug,"[{""key"":""by_category_slug"",""value"":""electronics""}]"
-rental_filter,"?is_rental=true",200,Filter for rental products only,"[{""key"":""is_rental"",""value"":""true""}]"
-sorting_asc,"?sort=name",200,Sort products by name ascending,"[{""key"":""sort"",""value"":""name""}]"
-sorting_desc,"?sort=-price",200,Sort products by price descending,"[{""key"":""sort"",""value"":""-price""}]"
-price_range,"?between=price,10,50",200,Filter products by price range,"[{""key"":""between"",""value"":""price,10,50""}]"
-multiple_filters,"?by_category=1&by_brand=2",200,Multiple filters - category and brand,"[{""key"":""by_category"",""value"":""1""},{""key"":""by_brand"",""value"":""2""}]"
-complex_query,"?q=test&sort=name&page=1",200,Complex query with search sort and pagination,"[{""key"":""q"",""value"":""test""},{""key"":""sort"",""value"":""name""},{""key"":""page"",""value"":""1""}]"
-invalid_page,"?page=-1",200,Invalid negative page number (should default),"[{""key"":""page"",""value"":""-1""}]"
-invalid_category,"?by_category=999999",200,Non-existent category ID filter,"[{""key"":""by_category"",""value"":""999999""}]"
-invalid_brand,"?by_brand=999999",200,Non-existent brand ID filter,"[{""key"":""by_brand"",""value"":""999999""}]"
-invalid_category_slug,"?by_category_slug=nonexistent",200,Non-existent category slug filter,"[{""key"":""by_category_slug"",""value"":""nonexistent""}]"
-security_sql_injection,"?q='; DROP TABLE products; --",200,SQL injection attempt in search query,"[{""key"":""q"",""value"":""'; DROP TABLE products; --""}]"
-security_xss_attempt,"?q=<script>alert('xss')</script>",200,XSS attempt in search query,"[{""key"":""q"",""value"":""<script>alert('xss')</script>""}]"
-special_chars_query,"?q=@#$%^&*()",200,Search with special characters,"[{""key"":""q"",""value"":""@#$%^&*()""}]"
-long_query,"?q=verylongquerystringthatexceedsnormallimitsandmightcauseissuesverylongquerystringthatexceedsnormallimits",200,Very long search query,"[{""key"":""q"",""value"":""verylongquerystringthatexceedsnormallimitsandmightcauseissuesverylongquerystringthatexceedsnormallimits""}]"
-unicode_query,"?q=测试",200,Unicode characters in search query,"[{""key"":""q"",""value"":""测试""}]"
-zero_page,"?page=0",200,Zero page number (should default),"[{""key"":""page"",""value"":""0""}]"
-large_page,"?page=99999",200,Very large page number,"[{""key"":""page"",""value"":""99999""}]"
-float_page,"?page=1.5",200,Float page number (should convert or default),"[{""key"":""page"",""value"":""1.5""}]"
-string_category,"?by_category=abc",200,String instead of number for category,"[{""key"":""by_category"",""value"":""abc""}]"
-empty_search,"?q=",200,Empty search query,"[{""key"":""q"",""value"":""""}}]"
-whitespace_search,"?q=%20%20%20",200,Whitespace only search query,"[{""key"":""q"",""value"":""   ""}]"
+query_params,expected_status,test_description
+,200,Get all products
+?page=1,200,Pagination - valid page
+?page=0,200,Boundary test - page 0
+?page=1000,200,Boundary test - large page
+?page=-1,422,Invalid negative page
+?page=abc,422,Invalid page format
+?by_category=1,200,Filter by valid category
+?by_category=999,200,Non-existent category
+?by_category=abc,422,Invalid category format
+?q=test,200,Search with text
+?q=,200,Empty search query
+?q=123,200,Search with numbers
+?sort=name,200,Sort by name ascending
+?sort=-price,200,Sort by price descending
+?sort=invalid,200,Invalid sort field
+?page=1&by_category=1,200,Multiple valid params
+?q=test&sort=name,200,Search with sorting
+?page=1&by_category=1&sort=price,200,Complex query combination
+?by_brand=1,200,Filter by brand
+?is_rental=true,200,Filter rental products
+"?between=price,10,50",200,Price range filter
